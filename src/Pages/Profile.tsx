@@ -8,6 +8,8 @@ function Profile() {
   const [description, setDescription] = useState<string>(`
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at officia quisquam fugit eum, quod quidem adipisci totam alias, molestias voluptatem facere cupiditate tenetur? Voluptas numquam doloremque distinctio autem ratione
 `);
+
+  function handleSignout() {}
   return (
     <Container className="mx-auto border rounded p-2 mt-2">
       <img
@@ -17,10 +19,13 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at officia 
       />
 
       <div className="d-flex flex-column pt-4 px-2">
-        <div className="h2">
-          Name
-          <span>{userName}</span>
+        <div className="d-flex flex-row justify-content-between">
+          <span className="h2">{userName}</span>
+          <Button size="sm" onClick={handleSignout}>
+            Sign Out
+          </Button>
         </div>
+
         <ul className="list-group">
           <li className="list-group-item text-capitalize">
             email: <span className="text-lowercase">{emailId}</span>
@@ -37,7 +42,7 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at officia 
       </div>
 
       <div className="pt-4 py-2 d-grid">
-        <Button className="btn-primary">Translate</Button>
+        <Button>Translate</Button>
       </div>
     </Container>
   );
