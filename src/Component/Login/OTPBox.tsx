@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 let currentOTPIndex: number = 0;
 
@@ -9,6 +10,8 @@ interface IProps {
 }
 
 function OTPBox({ show, handleClose }: IProps) {
+  const navigate = useNavigate();
+
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
   const [activeOTPIndex, setActiveOTPIndex] = useState<number>(0);
 
@@ -38,6 +41,10 @@ function OTPBox({ show, handleClose }: IProps) {
   ) => {
     currentOTPIndex = index;
     key === "Backspace" && setActiveOTPIndex(currentOTPIndex - 1);
+  };
+
+  const handleSubmit = () => {
+    navigate("profile");
   };
 
   return (
@@ -84,7 +91,7 @@ function OTPBox({ show, handleClose }: IProps) {
         <Button variant="secondary" onClick={handleClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={handleClose}>
+        <Button variant="primary" onClick={handleSubmit}>
           Submit
         </Button>
       </Modal.Footer>
