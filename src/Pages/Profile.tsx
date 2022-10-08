@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { Button, Card, Container } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { auth } from "../fbase/firebase";
+import { logout } from "../store/userSlice";
 
 function Profile() {
   const [userName, setUserName] = useState<string>("test 1");
@@ -9,7 +12,12 @@ function Profile() {
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at officia quisquam fugit eum, quod quidem adipisci totam alias, molestias voluptatem facere cupiditate tenetur? Voluptas numquam doloremque distinctio autem ratione
 `);
 
-  function handleSignout() {}
+  const dispatch = useDispatch();
+  function handleSignout() {
+    dispatch(logout());
+    auth.signOut();
+  }
+
   return (
     <Container className="mx-auto border rounded p-2 mt-2">
       <img
