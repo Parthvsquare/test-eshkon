@@ -1,13 +1,15 @@
 import { signInWithEmailAndPassword } from "@firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, Button, Card, Container, Form } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
 import OTPBox from "../Component/Login/OTPBox";
 import { auth } from "../fbase/firebase";
-import { login } from "../store/userSlice";
+import { login, selectUser } from "../store/userSlice";
 
 function LoginPage() {
+  const user = useSelector(selectUser);
+
   const [show, setShow] = useState(false);
   const [error, setError] = useState({
     error: false,
@@ -56,14 +58,40 @@ function LoginPage() {
           navigate("/profile");
         })
         .catch((error) => {
+          let message = "Login failed !";
+
+          if (error.code) {
+            switch (error.code) {
+              case "auth/user-disabled":
+                message = "User has been disabled";
+                break;
+              case "auth/user-not-found":
+                message = "User not found. Please try again";
+                break;
+              case "auth/wrong-password":
+                message = "Wrong Password";
+                break;
+              case "auth/email-already-in-use":
+                message = "Email already exists";
+                break;
+              case "auth/invalid-email":
+                message = "Invalid email";
+                break;
+              default:
+                message = "Login failed !";
+            }
+          }
           setError({
             error: true,
-            desc: "Credentials Not found, Please enter valid Email id and Password",
+            desc: message,
           });
         });
     }
   };
 
+  if (!!user) {
+    return <Navigate to="/profile" />;
+  }
   return (
     <>
       {error.error && <Alert variant="danger">{error.desc}</Alert>}
