@@ -10,7 +10,7 @@ import { login, selectUser } from "../store/userSlice";
 function LoginPage() {
   const user = useSelector(selectUser);
 
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const [error, setError] = useState({
     error: false,
     desc: "none",

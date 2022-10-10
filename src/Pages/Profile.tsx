@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../fbase/firebase";
 import { logout, selectUser } from "../store/userSlice";
 import { userBio } from "../assets/data";
-import { useTranslation } from "react-i18next";
+import { Trans, Translation, useTranslation } from "react-i18next";
 
 function Profile() {
   const user = useSelector(selectUser);
@@ -14,7 +14,7 @@ function Profile() {
   const [translated, setTranslated] = useState<boolean>(false);
   const [description, setDescription] = useState<string>(userBio);
 
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   const dispatch = useDispatch();
   function handleSignout() {
@@ -27,6 +27,10 @@ function Profile() {
       setEmailId(user.email);
     }
   }, []);
+
+  const changeLanguage = (lng: any) => {
+    i18n.changeLanguage(lng);
+  };
 
   return (
     <Container className="mx-auto border rounded p-2 mt-2">
@@ -54,13 +58,22 @@ function Profile() {
         </ul>
       </div>
 
-      <div className="d-flex flex-column pt-4 px-2">
+      <div className="d-flex flex-column pt-4 px-2 py-2">
         <span className="h2">Description</span>
-        <span className="">{t(description)}</span>
+        {/* <Translation>
+          {(t, { i18n }) => <span className="">{t(description)}</span>}
+        </Translation> */}
+        <span className="caption">
+          <Trans i18nKey="bio">{description}</Trans>
+        </span>
       </div>
 
-      <div className="pt-4 py-2 d-grid">
-        <Button>Translate</Button>
+      <div className="pt-4py-2 d-grid">
+        <Button
+          disabled={i18n.resolvedLanguage === "fr"}
+          onClick={() => changeLanguage("fr")}>
+          Translate
+        </Button>
       </div>
     </Container>
   );
