@@ -1,5 +1,5 @@
 import { signInWithEmailAndPassword } from "@firebase/auth";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Alert, Button, Card, Container, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import { login, selectUser } from "../store/userSlice";
 function LoginPage() {
   const user = useSelector(selectUser);
 
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [error, setError] = useState({
     error: false,
     desc: "none",
@@ -24,14 +24,15 @@ function LoginPage() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // useEffect(() => {
+  //   if (error.error) {
+  //     console.log(emailRef.current);
+  //     emailRef.current?.focus();
+  //   }
+  //   // setError({ error: false, desc: "none" });
+  // }, [error]);
 
-  useEffect(() => {
-    emailRef.current?.focus() && setError({ error: false, desc: "none" });
-  }, [emailRef, passwordRef]);
-
-  const handleSignIn = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
       emailRef.current &&
@@ -40,6 +41,7 @@ function LoginPage() {
       passwordRef.current.value === ""
     ) {
       setError({ error: true, desc: "Credentials are empty, Please complete" });
+      emailRef.current?.focus();
     } else {
       const tempEmailRef = emailRef.current ? emailRef.current.value : "";
       const tempPasswordRef = passwordRef.current
@@ -85,6 +87,7 @@ function LoginPage() {
             error: true,
             desc: message,
           });
+          emailRef.current?.focus();
         });
     }
   };
@@ -98,14 +101,15 @@ function LoginPage() {
       <Container className="h-100vh d-flex align-items-center justify-content-center flex-grow-1">
         <Card style={{ maxWidth: "70%" }} className="m-3">
           <Card.Body>
-            <Form>
+            <Form onSubmit={(e) => handleSignIn(e)}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control
                   ref={emailRef}
                   type="email"
                   placeholder="Enter email"
-                  onChange={(e) => setEmail(e.target.value)}
+                  autoFocus
+                  // onChange={(e) => setEmail(e.target.value)}
                 />
                 <Form.Text className="text-muted">
                   We'll never share your email with anyone else.
@@ -118,13 +122,10 @@ function LoginPage() {
                   ref={passwordRef}
                   type="password"
                   placeholder="Password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  // onChange={(e) => setPassword(e.target.value)}
                 />
               </Form.Group>
-              <Button
-                onClick={(e) => handleSignIn(e)}
-                variant="primary"
-                type="submit">
+              <Button variant="primary" type="submit">
                 Submit
               </Button>
             </Form>

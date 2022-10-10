@@ -3,11 +3,9 @@ import AppRoutes from "./routes";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { auth } from "./fbase/firebase";
-import { login, logout, selectUser } from "./store/userSlice";
-import PrivateRoute from "./Component/PrivateRoute";
+import { login, logout } from "./store/userSlice";
 
 function App() {
-  const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,8 +21,8 @@ function App() {
           })
         );
       } else {
-        dispatch(logout());
         //user is logged out
+        dispatch(logout());
       }
     });
   }, []);

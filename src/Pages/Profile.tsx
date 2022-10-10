@@ -1,22 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Container } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../fbase/firebase";
-import { logout } from "../store/userSlice";
+import { logout, selectUser } from "../store/userSlice";
+import { userBio } from "../assets/data";
+import { useTranslation } from "react-i18next";
 
 function Profile() {
+  const user = useSelector(selectUser);
+
   const [userName, setUserName] = useState<string>("test 1");
   const [emailId, setEmailId] = useState<string>("test@gmail.com");
   const [translated, setTranslated] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>(`
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at officia quisquam fugit eum, quod quidem adipisci totam alias, molestias voluptatem facere cupiditate tenetur? Voluptas numquam doloremque distinctio autem ratione
-`);
+  const [description, setDescription] = useState<string>(userBio);
+
+  const { t, i18n } = useTranslation();
 
   const dispatch = useDispatch();
   function handleSignout() {
-    dispatch(logout());
     auth.signOut();
+    dispatch(logout());
   }
+
+  useEffect(() => {
+    if (user.email) {
+      setEmailId(user.email);
+    }
+  }, []);
 
   return (
     <Container className="mx-auto border rounded p-2 mt-2">
@@ -46,7 +56,7 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at officia 
 
       <div className="d-flex flex-column pt-4 px-2">
         <span className="h2">Description</span>
-        <span className="">{description}</span>
+        <span className="">{t(description)}</span>
       </div>
 
       <div className="pt-4 py-2 d-grid">

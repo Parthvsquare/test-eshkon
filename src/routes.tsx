@@ -7,6 +7,7 @@ function AppRoutes() {
   return (
     <>
       <Routes>
+        <Route path="/" element={<LoginPage />} />
         <Route
           path="/profile"
           element={
@@ -15,7 +16,6 @@ function AppRoutes() {
             </PrivateRoute>
           }
         />
-        <Route path="/" element={<LoginPage />} />
       </Routes>
     </>
   );
