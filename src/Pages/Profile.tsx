@@ -5,16 +5,23 @@ import { auth } from "../fbase/firebase";
 import { logout, selectUser } from "../store/userSlice";
 import { userBio } from "../assets/data";
 import { Trans, Translation, useTranslation } from "react-i18next";
+import { selectLanguage, toFrench } from "../store/languageSlice";
 
 function Profile() {
   const user = useSelector(selectUser);
 
   const [userName, setUserName] = useState<string>("test 1");
   const [emailId, setEmailId] = useState<string>("test@gmail.com");
-  const [translated, setTranslated] = useState<boolean>(false);
+  const [translated, setTranslated] = useState<string>("False");
   const [description, setDescription] = useState<string>(userBio);
 
   const { i18n } = useTranslation();
+  const language = useSelector(selectLanguage);
+
+  console.log(
+    "===> ~ file: Profile.tsx ~ line 20 ~ Profile ~ language",
+    language
+  );
 
   const dispatch = useDispatch();
   function handleSignout() {
@@ -28,7 +35,15 @@ function Profile() {
     }
   }, []);
 
+  useEffect(() => {
+    if (language === "fr") {
+      i18n.changeLanguage("fr");
+      setTranslated("True");
+    }
+  }, []);
+
   const changeLanguage = (lng: any) => {
+    dispatch(toFrench("fr"));
     i18n.changeLanguage(lng);
   };
 
